@@ -1,0 +1,40 @@
+{
+  "name": "open-health",
+  "description": "开源项目健康度分析平台",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "prepare-commit-msg": "exec < /dev/tty && npx cz --hook || true"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,vue}": [
+      "prettier --write ",
+      "eslint --fix --cache "
+    ]
+  },
+  "scripts": {
+    "prepare": "husky",
+    "commit": "cz",
+    "lint": "eslint \"./Way Tech+复赛+OpenHealth-开源项目健康度分析平台/**/*\" --fix",
+    "format": "prettier --write \"./Way Tech+复赛+OpenHealth-开源项目健康度分析平台/**/*\""
+  },
+  "keywords": [],
+  "author": "Way Tech",
+  "license": "MIT",
+  "devDependencies": {
+    "@innei/prettier": "^0.15.0",
+    "@sxzz/eslint-config": "4.5.1",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^9.16.0",
+    "husky": "9.1.7",
+    "prettier": "^3.4.2"
+  },
+  "packageManager": "pnpm@9.4.0",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

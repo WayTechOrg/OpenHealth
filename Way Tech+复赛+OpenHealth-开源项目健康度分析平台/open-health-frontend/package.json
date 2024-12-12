@@ -1,0 +1,31 @@
+{
+  "name": "open-health-frontend",
+  "version": "0.0.1",
+  "description": "开源项目健康度分析平台-前端",
+  "type": "module",
+  "license": "MIT",
+  "author": "Way Tech",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --fix",
+    "format": "prettier --write . ",
+    "lint:full": "pnpm run lint && pnpm run format"
+  },
+  "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@innei/prettier": "^0.15.0",
+    "@sxzz/eslint-config": "4.5.1",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "eslint": "^9.16.0",
+    "prettier": "^3.4.2",
+    "rimraf": "^6.0.1",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.1",
+    "vue-tsc": "^2.1.10"
+  }
+}
