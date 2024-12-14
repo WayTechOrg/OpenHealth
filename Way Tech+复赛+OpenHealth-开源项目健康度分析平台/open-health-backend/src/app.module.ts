@@ -9,6 +9,7 @@ import { HttpCacheInterceptor } from './common/interceptors/cache.interceptor'
 import { JSONTransformerInterceptor } from './common/interceptors/json-transformer.interceptor'
 import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 import { ConfigsModule } from './modules/configs/configs.module'
+import { OpenDiggerModule } from './modules/open-digger/openDigger.module'
 import { UserModule } from './modules/user/user.module'
 import { CacheModule } from './processors/cache/cache.module'
 import { DatabaseModule } from './processors/database/database.module'
@@ -23,6 +24,8 @@ import { HelperModule } from './processors/helper/helper.module'
 
     LoggerModule,
     UserModule,
+
+    OpenDiggerModule,
   ],
   controllers: [AppController],
   providers: [
