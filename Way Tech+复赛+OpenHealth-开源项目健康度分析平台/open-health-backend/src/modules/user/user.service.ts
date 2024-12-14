@@ -62,8 +62,9 @@ export class UserService {
     return { ...user }
   }
   async hasMaster() {
-    // return !!(await this.userModel.countDocuments())
-    return !!(await this.userModel.findOne({ role: 'admin' }))
+    // FIXME: MVP 暂时限制仅允许一个用户存在，同时管理员也是这位仅有的用户
+    return !!(await this.userModel.countDocuments())
+    // return !!(await this.userModel.findOne({ role: 'admin' }))
   }
 
   public async getMaster() {

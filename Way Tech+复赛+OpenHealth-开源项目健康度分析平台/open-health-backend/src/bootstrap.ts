@@ -13,7 +13,7 @@ import { logger } from './global/consola.global'
 import { isDev } from './utils/environment.utils'
 import type { NestFastifyApplication } from '@nestjs/platform-fastify'
 
-// const APIVersion = 1
+const APIVersion = '1.0.0'
 const Origin = CROSS_DOMAIN.allowedOrigins
 
 declare const module: any
@@ -52,9 +52,9 @@ export async function bootstrap() {
   if (isDev) {
     const { DocumentBuilder, SwaggerModule } = await import('@nestjs/swagger')
     const options = new DocumentBuilder()
-      .setTitle('API')
-      .setDescription('The blog API description')
-      // .setVersion(`${APIVersion}`)
+      .setTitle('OpenHealth API')
+      .setDescription('OpenHealth API 文档')
+      .setVersion(String(APIVersion))
       .addSecurity('bearer', {
         type: 'http',
         scheme: 'bearer',

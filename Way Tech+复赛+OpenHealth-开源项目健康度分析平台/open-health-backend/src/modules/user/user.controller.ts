@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
-
+import { Body, Get, Param, Post } from '@nestjs/common'
+import { ApiOperation } from '@nestjs/swagger'
 import { ApiController } from '~/common/decorators/api-controller.decorator'
 import { Auth } from '~/common/decorators/auth.decorator'
 import { ApiName } from '~/common/decorators/openapi.decorator'
@@ -16,12 +16,15 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
+  @Auth()
+  @ApiOperation({ summary: '获取用户信息' })
   @Get('/:id')
   async getUsers(@Param('id') id: string) {
     return await this.userService.getUserInfo(id)
   }
 
   @Post('/register')
+  @ApiOperation({ summary: '注册用户' })
   async register(
     @Body()
     body: Pick<UserModel, 'username' | 'name' | 'password'> &
@@ -31,6 +34,7 @@ export class UserController {
   }
 
   @Post('/login')
+  @ApiOperation({ summary: '登录' })
   async login(@Body() body: LoginDto) {
     const user = await this.userService.login(body.username, body.password)
     const token = await this.authService.signToken(user.id.toString())
