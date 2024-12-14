@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common'
 
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core'
-import { LoggerModule } from 'nestjs-pretty-logger'
+import { ScheduleModule } from '@nestjs/schedule'
 
+import { LoggerModule } from 'nestjs-pretty-logger'
 import { AppController } from './app.controller'
 import { AllExceptionsFilter } from './common/filters/any-exception.filter'
 import { HttpCacheInterceptor } from './common/interceptors/cache.interceptor'
@@ -17,6 +18,8 @@ import { HelperModule } from './processors/helper/helper.module'
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
+
     CacheModule,
     DatabaseModule,
     HelperModule,
