@@ -170,7 +170,7 @@ class Fetcher {
   constructor(baseURL: string) {
     this.instance = axios.create({
       baseURL,
-      timeout: 10000,
+      timeout: 30000,
     })
 
     // 请求拦截器
