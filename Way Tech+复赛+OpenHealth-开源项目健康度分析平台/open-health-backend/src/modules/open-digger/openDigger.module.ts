@@ -12,5 +12,6 @@ import { OpenDiggerService } from './openDigger.service'
     OpenDiggerBuilderService,
     OpenDiggerSchedulerService,
   ],
+  exports: [OpenDiggerService],
 })
 export class OpenDiggerModule {}

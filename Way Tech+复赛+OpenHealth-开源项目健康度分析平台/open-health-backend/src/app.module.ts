@@ -9,6 +9,7 @@ import { AllExceptionsFilter } from './common/filters/any-exception.filter'
 import { HttpCacheInterceptor } from './common/interceptors/cache.interceptor'
 import { JSONTransformerInterceptor } from './common/interceptors/json-transformer.interceptor'
 import { ResponseInterceptor } from './common/interceptors/response.interceptor'
+import { AnalyzerModule } from './modules/analyzer/analyzer.module'
 import { ConfigsModule } from './modules/configs/configs.module'
 import { OpenDiggerModule } from './modules/open-digger/openDigger.module'
 import { UserModule } from './modules/user/user.module'
@@ -29,6 +30,7 @@ import { HelperModule } from './processors/helper/helper.module'
     UserModule,
 
     OpenDiggerModule,
+    AnalyzerModule,
   ],
   controllers: [AppController],
   providers: [
