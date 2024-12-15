@@ -11,7 +11,6 @@ export class OpenDiggerController {
   constructor(private readonly openDiggerService: OpenDiggerService) {}
 
   @Get(':platform/:owner/:repo')
-  @Auth()
   @ApiOperation({ summary: '获取仓库指标数据' })
   async getRepoMetrics(
     @Param('platform') platform: string,
