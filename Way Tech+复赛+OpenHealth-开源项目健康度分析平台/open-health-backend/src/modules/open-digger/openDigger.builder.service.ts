@@ -3,7 +3,7 @@ import axios from 'axios'
 
 @Injectable()
 export class OpenDiggerBuilderService {
-  private readonly baseUrl = 'https://oss.open-digger.cn'
+  private readonly baseUrl = 'https://oss.x-lab.info/open_digger'
 
   constructor() {}
 
@@ -12,23 +12,43 @@ export class OpenDiggerBuilderService {
     return `${this.baseUrl}/${platform}/${owner}/${repo}`
   }
 
+  // 封装请求方法，添加错误处理
+  private async fetchData(url: string, metricName: string) {
+    try {
+      const response = await axios.get(url)
+      return response.data
+    } catch (error) {
+      throw new Error(`请求 ${metricName} (${url}) 失败: ${error.message}`)
+    }
+  }
+
   // 1. 活跃度相关方法
   async getActivity(platform: string, owner: string, repo: string) {
     const url = `${this.getBaseUrl(platform, owner, repo)}/activity.json`
-    return await axios.get(url)
+    return await this.fetchData(url, 'activity')
   }
 
   // 2. Issue相关方法
   async getIssueMetrics(platform: string, owner: string, repo: string) {
     const baseUrl = this.getBaseUrl(platform, owner, repo)
     const metrics = {
-      new: await axios.get(`${baseUrl}/issues_new.json`),
-      closed: await axios.get(`${baseUrl}/issues_closed.json`),
-      comments: await axios.get(`${baseUrl}/issue_comments.json`),
-      age: await axios.get(`${baseUrl}/issue_age.json`),
-      responseTime: await axios.get(`${baseUrl}/issue_response_time.json`),
-      resolutionDuration: await axios.get(
+      new: await this.fetchData(`${baseUrl}/issues_new.json`, 'issues_new'),
+      closed: await this.fetchData(
+        `${baseUrl}/issues_closed.json`,
+        'issues_closed',
+      ),
+      comments: await this.fetchData(
+        `${baseUrl}/issue_comments.json`,
+        'issue_comments',
+      ),
+      age: await this.fetchData(`${baseUrl}/issue_age.json`, 'issue_age'),
+      responseTime: await this.fetchData(
+        `${baseUrl}/issue_response_time.json`,
+        'issue_response_time',
+      ),
+      resolutionDuration: await this.fetchData(
         `${baseUrl}/issue_resolution_duration.json`,
+        'issue_resolution_duration',
       ),
     }
     return metrics
@@ -38,15 +58,29 @@ export class OpenDiggerBuilderService {
   async getPRMetrics(platform: string, owner: string, repo: string) {
     const baseUrl = this.getBaseUrl(platform, owner, repo)
     const metrics = {
-      changeRequests: await axios.get(`${baseUrl}/change_requests.json`),
-      reviews: await axios.get(`${baseUrl}/change_request_reviews.json`),
-      accepted: await axios.get(`${baseUrl}/change_requests_accepted.json`),
-      age: await axios.get(`${baseUrl}/change_request_age.json`),
-      responseTime: await axios.get(
-        `${baseUrl}/change_request_response_time.json`,
+      changeRequests: await this.fetchData(
+        `${baseUrl}/change_requests.json`,
+        'change_requests',
       ),
-      resolutionDuration: await axios.get(
-        `${baseUrl}/change_requests_resolution_duration.json`,
+      reviews: await this.fetchData(
+        `${baseUrl}/change_requests_reviews.json`,
+        'change_requests_reviews',
+      ),
+      accepted: await this.fetchData(
+        `${baseUrl}/change_requests_accepted.json`,
+        'change_requests_accepted',
+      ),
+      age: await this.fetchData(
+        `${baseUrl}/change_request_age.json`,
+        'change_request_age',
+      ),
+      responseTime: await this.fetchData(
+        `${baseUrl}/change_request_response_time.json`,
+        'change_request_response_time',
+      ),
+      resolutionDuration: await this.fetchData(
+        `${baseUrl}/change_request_resolution_duration.json`,
+        'change_request_resolution_duration',
       ),
     }
     return metrics
@@ -56,9 +90,18 @@ export class OpenDiggerBuilderService {
   async getCodeChangeMetrics(platform: string, owner: string, repo: string) {
     const baseUrl = this.getBaseUrl(platform, owner, repo)
     const metrics = {
-      addLines: await axios.get(`${baseUrl}/code_change_lines_add.json`),
-      removeLines: await axios.get(`${baseUrl}/code_change_lines_remove.json`),
-      sumLines: await axios.get(`${baseUrl}/code_change_lines_sum.json`),
+      addLines: await this.fetchData(
+        `${baseUrl}/code_change_lines_add.json`,
+        'code_change_lines_add',
+      ),
+      removeLines: await this.fetchData(
+        `${baseUrl}/code_change_lines_remove.json`,
+        'code_change_lines_remove',
+      ),
+      sumLines: await this.fetchData(
+        `${baseUrl}/code_change_lines_sum.json`,
+        'code_change_lines_sum',
+      ),
     }
     return metrics
   }
@@ -67,15 +110,25 @@ export class OpenDiggerBuilderService {
   async getContributorMetrics(platform: string, owner: string, repo: string) {
     const baseUrl = this.getBaseUrl(platform, owner, repo)
     const metrics = {
-      contributors: await axios.get(`${baseUrl}/contributors.json`),
-      details: await axios.get(`${baseUrl}/contributors_detail.json`),
-      newContributors: await axios.get(`${baseUrl}/new_contributors.json`),
-      inactiveContributors: await axios.get(
-        `${baseUrl}/inactive_contributors.json`,
+      contributors: await this.fetchData(
+        `${baseUrl}/contributors.json`,
+        'contributors',
       ),
-      busFactor: await axios.get(`${baseUrl}/bus_factor.json`),
-      absenceFactor: await axios.get(
-        `${baseUrl}/contributor_absence_factor.json`,
+      details: await this.fetchData(
+        `${baseUrl}/contributors_detail.json`,
+        'contributors_detail',
+      ),
+      newContributors: await this.fetchData(
+        `${baseUrl}/new_contributors.json`,
+        'new_contributors',
+      ),
+      inactiveContributors: await this.fetchData(
+        `${baseUrl}/inactive_contributors.json`,
+        'inactive_contributors',
+      ),
+      busFactor: await this.fetchData(
+        `${baseUrl}/bus_factor.json`,
+        'bus_factor',
       ),
     }
     return metrics
@@ -85,11 +138,10 @@ export class OpenDiggerBuilderService {
   async getOpenRankMetrics(platform: string, owner: string, repo: string) {
     const baseUrl = this.getBaseUrl(platform, owner, repo)
     const metrics = {
-      openrank: await axios.get(`${baseUrl}/openrank.json`),
-      details: await axios.get(`${baseUrl}/openrank_detail.json`),
-      communityOpenrank: await axios.get(`${baseUrl}/community_openrank.json`),
-      communityDetails: await axios.get(
-        `${baseUrl}/community_openrank_detail.json`,
+      openrank: await this.fetchData(`${baseUrl}/openrank.json`, 'openrank'),
+      communityOpenrank: await this.fetchData(
+        `${baseUrl}/community_openrank.json`,
+        'community_openrank',
       ),
     }
     return metrics
@@ -99,8 +151,11 @@ export class OpenDiggerBuilderService {
   async getAttentionMetrics(platform: string, owner: string, repo: string) {
     const baseUrl = this.getBaseUrl(platform, owner, repo)
     const metrics = {
-      stars: await axios.get(`${baseUrl}/stars.json`),
-      technicalFork: await axios.get(`${baseUrl}/technical_fork.json`),
+      stars: await this.fetchData(`${baseUrl}/stars.json`, 'stars'),
+      technicalFork: await this.fetchData(
+        `${baseUrl}/technical_fork.json`,
+        'technical_fork',
+      ),
     }
     return metrics
   }

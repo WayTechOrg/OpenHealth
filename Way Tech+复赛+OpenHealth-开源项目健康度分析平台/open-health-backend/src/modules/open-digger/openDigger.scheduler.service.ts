@@ -1,4 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common'
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common'
 import { Cron } from '@nestjs/schedule'
 import { ReturnModelType } from '@typegoose/typegoose'
 import { InjectModel } from '~/transformers/model.transformer'
@@ -40,36 +44,43 @@ export class OpenDiggerSchedulerService {
   }
 
   async syncRepoMetrics(platform: string, owner: string, repo: string) {
-    try {
-      const [
-        activity,
-        issues,
-        prs,
-        codeChanges,
-        contributors,
-        openrank,
-        attention,
-      ] = await Promise.all([
-        this.builderService.getActivity(platform, owner, repo),
-        this.builderService.getIssueMetrics(platform, owner, repo),
+    const metricsMap = {
+      activity: () => this.builderService.getActivity(platform, owner, repo),
+      issues: () => this.builderService.getIssueMetrics(platform, owner, repo),
+      pullRequests: () =>
         this.builderService.getPRMetrics(platform, owner, repo),
+      codeChanges: () =>
         this.builderService.getCodeChangeMetrics(platform, owner, repo),
+      contributors: () =>
         this.builderService.getContributorMetrics(platform, owner, repo),
+      openrank: () =>
         this.builderService.getOpenRankMetrics(platform, owner, repo),
+      attention: () =>
         this.builderService.getAttentionMetrics(platform, owner, repo),
-      ])
+    }
+
+    try {
+      const results: Record<string, any> = {}
+
+      for (const [metricName, fetcher] of Object.entries(metricsMap)) {
+        try {
+          results[metricName] = await fetcher()
+        } catch (error) {
+          throw new Error(`获取 ${metricName} 指标时失败: ${error.message}`)
+        }
+      }
 
       await this.metricsModel.findOneAndUpdate(
         { platform, owner, repo },
         {
           $set: {
-            activity: activity.data,
-            issues,
-            pullRequests: prs,
-            codeChanges,
-            contributors,
-            openrank,
-            attention,
+            activity: results.activity,
+            issues: results.issues,
+            pullRequests: results.pullRequests,
+            codeChanges: results.codeChanges,
+            contributors: results.contributors,
+            openrank: results.openrank,
+            attention: results.attention,
             lastSyncTime: new Date(),
           },
         },
@@ -77,8 +88,12 @@ export class OpenDiggerSchedulerService {
       )
 
       this.logger.log(`仓库 ${owner}/${repo} 数据同步完成`)
+      return true
     } catch (error) {
       this.logger.error(`仓库 ${owner}/${repo} 数据同步失败:`, error)
+      throw new InternalServerErrorException(
+        `仓库 ${owner}/${repo} 数据同步失败: ${error.message}`,
+      )
     }
   }
 }
