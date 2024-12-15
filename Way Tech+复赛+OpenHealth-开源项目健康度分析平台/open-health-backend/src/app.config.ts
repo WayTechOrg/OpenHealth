@@ -9,7 +9,7 @@ const argv = yargs(hideBin(process.argv)).argv as Record<string, unknown>
 console.log(argv)
 export const PORT = argv.port || 3333
 export const CROSS_DOMAIN = {
-  allowedOrigins: ['localhost:5173'],
+  allowedOrigins: ['localhost:5173', '192.168.8.10:5173'],
   allowedReferer: '',
 }
 

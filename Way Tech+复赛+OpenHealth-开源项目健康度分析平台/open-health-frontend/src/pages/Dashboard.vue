@@ -43,7 +43,7 @@ const stats = computed(() => {
   }
 })
 
-// 初始化趋势图
+// 初始趋势图
 onMounted(() => {
   if (projects.value.length === 0) return
 
@@ -269,14 +269,6 @@ const showGuide = ref(projects.value.length === 0)
           </template>
           <div class="card-content">
             <h2>{{ stats.total }}</h2>
-            <el-button
-              v-if="stats.total === 0"
-              type="primary"
-              class="add-project"
-              @click="router.push('/analysis')"
-            >
-              添加第一个项目
-            </el-button>
           </div>
         </el-card>
       </el-col>
@@ -403,9 +395,10 @@ const showGuide = ref(projects.value.length === 0)
   margin-bottom: 20px;
 }
 
+/* 
 .overview-card {
-  height: 160px;
-}
+  height: 200px;
+} */
 
 .card-header {
   display: flex;
@@ -419,12 +412,19 @@ const showGuide = ref(projects.value.length === 0)
   align-items: center;
   justify-content: center;
   height: calc(100% - 40px);
+  gap: 10px;
 }
 
 .card-content h2 {
   font-size: 2.5em;
   margin: 0;
   color: var(--el-color-primary);
+  line-height: 1;
+}
+
+.card-content .el-button {
+  margin-top: 10px;
+  white-space: nowrap;
 }
 
 .charts {
