@@ -363,12 +363,6 @@ const showGuide = ref(projects.value.length === 0)
           </el-icon>
           查看项目列表
         </el-button>
-        <el-button type="success" @click="router.push('/settings')">
-          <el-icon>
-            <Setting />
-          </el-icon>
-          系统设置
-        </el-button>
       </div>
     </el-card>
 
