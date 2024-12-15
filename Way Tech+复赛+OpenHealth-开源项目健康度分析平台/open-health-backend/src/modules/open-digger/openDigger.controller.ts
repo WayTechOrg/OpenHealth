@@ -3,6 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { DeleteResult } from 'mongoose'
 import { Auth } from '~/common/decorators/auth.decorator'
 import { ApiName } from '~/common/decorators/openapi.decorator'
+import { OpenDiggerRepoDto } from './openDigger.dto'
 import { OpenDiggerService } from './openDigger.service'
 
 @ApiName
@@ -23,12 +24,12 @@ export class OpenDiggerController {
   @Post('repo')
   @Auth()
   @ApiOperation({ summary: '添加仓库监控' })
-  async addRepo(
-    @Body('platform') platform: string,
-    @Body('owner') owner: string,
-    @Body('repo') repo: string,
-  ) {
-    return await this.openDiggerService.addRepo(platform, owner, repo)
+  async addRepo(@Body() body: OpenDiggerRepoDto) {
+    return await this.openDiggerService.addRepo(
+      body.platform,
+      body.owner,
+      body.repo,
+    )
   }
 
   @Delete(':platform/:owner/:repo')
