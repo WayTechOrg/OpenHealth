@@ -65,7 +65,11 @@ const handleLogout = () => {
       <!-- 顶部导航栏 -->
       <el-header class="header">
         <div class="header-left">
-          <div class="logo-container">
+          <div
+            class="logo-container"
+            @click="router.push('/')"
+            style="cursor: pointer"
+          >
             <img src="/team.png" alt="Logo" class="logo" />
             <h1 class="title">OpenHealth</h1>
           </div>
