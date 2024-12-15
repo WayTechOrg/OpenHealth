@@ -12,6 +12,7 @@ export class AIAnalyzerService {
 
   async generateHealthReport(metrics: ProjectMetrics): Promise<{
     analysis: string
+    score: number
   }> {
     // 1. 获取基础健康度评分
     const healthScores =
@@ -21,11 +22,23 @@ export class AIAnalyzerService {
     const prompt = this.buildAnalysisPrompt(metrics, healthScores)
 
     // 3. 调用大模型生成分析报告
-    const analysis = await this.GroqAIService.analyze(prompt)
+    let analysis = await this.GroqAIService.analyze(prompt)
+
+    // 4. 解析评分
+    const score = this.parseScore(analysis)
+
+    // 5. 替换评分注释
+    analysis = analysis.replace(/<!--score:(\d+)-->/, ``)
 
     return {
       analysis,
+      score,
     }
+  }
+
+  private parseScore(analysis: string): number {
+    const scoreMatch = analysis.match(/<!--score:(\d+)-->/)
+    return scoreMatch ? Number.parseInt(scoreMatch[1]) : 0
   }
 
   private buildAnalysisPrompt(
@@ -143,6 +156,8 @@ export class AIAnalyzerService {
 - 具体执行步骤
 
 最后，请你根据你自己的分析结果，不要参考我提供计算出来的评分，自己计算一个评分，并给出评分理由。
+
+同时，将你的评分在输出的最后以注释的形式给出，如: <!--score:90-->
 
 请用清晰的结构化格式输出分析结果。
     `
