@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { useColorMode } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import type { FormInstance } from 'element-plus'
 import fetcher from '@/utils/fetcher'
 
 const router = useRouter()
+const route = useRoute()
+const mode = useColorMode()
+
+// 同步暗黑模式
+onMounted(() => {
+  document.documentElement.className = mode.value
+})
 
 const loginForm = ref({
   username: '',
@@ -35,7 +43,10 @@ const handleLogin = async () => {
     fetcher.setToken(token)
 
     ElMessage.success('登录成功')
-    router.push('/')
+
+    // 获取重定向地址
+    const redirect = route.query.redirect as string
+    router.push(redirect || '/')
   } catch (error: any) {
     ElMessage.error(error.message || '登录失败')
   } finally {
@@ -57,7 +68,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="login-container">
+  <div class="login-container" :class="mode">
     <el-card class="login-card">
       <template #header>
         <div class="card-header">
@@ -119,6 +130,15 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   background-color: var(--el-bg-color-page);
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+/* 暗黑模式样式 */
+.login-container.dark {
+  background-color: var(--el-bg-color-page);
+  color: var(--el-text-color-primary);
 }
 
 .login-card {

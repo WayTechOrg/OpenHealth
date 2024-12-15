@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useColorMode } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import type { FormInstance } from 'element-plus'
 import fetcher from '@/utils/fetcher'
 
 const router = useRouter()
+const mode = useColorMode()
+
+// 同步暗黑模式
+onMounted(() => {
+  document.documentElement.className = mode.value
+})
 
 const registerForm = ref({
   username: '',
@@ -68,7 +75,7 @@ const handleBack = () => {
 </script>
 
 <template>
-  <div class="register-container">
+  <div class="register-container" :class="mode">
     <el-card class="register-card">
       <template #header>
         <div class="card-header">
@@ -140,6 +147,15 @@ const handleBack = () => {
   justify-content: center;
   align-items: center;
   background-color: var(--el-bg-color-page);
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+/* 暗黑模式样式 */
+.register-container.dark {
+  background-color: var(--el-bg-color-page);
+  color: var(--el-text-color-primary);
 }
 
 .register-card {

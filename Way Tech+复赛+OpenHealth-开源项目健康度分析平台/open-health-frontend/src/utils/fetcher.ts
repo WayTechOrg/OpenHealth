@@ -51,6 +51,12 @@ interface ApiTypes {
   }
 
   // User 相关
+  UserController_check: {
+    method: 'GET'
+    path: '/users/check'
+    response: any
+    requiresAuth: true
+  }
   UserController_login: {
     method: 'POST'
     path: '/users/login'
@@ -137,6 +143,7 @@ const API_CONFIG: Record<keyof ApiTypes, any> = {
   },
   ConfigController_getConfigItem: { method: 'GET', path: '/configs/:key' },
   ConfigController_updateConfigItem: { method: 'PUT', path: '/configs/:key' },
+  UserController_check: { method: 'GET', path: '/users/check' },
   UserController_login: { method: 'POST', path: '/users/login' },
   UserController_register: { method: 'POST', path: '/users/register' },
   UserController_getUsers: { method: 'GET', path: '/users/:id' },
@@ -183,6 +190,23 @@ class Fetcher {
       }
       return config
     })
+
+    // 响应拦截器
+    this.instance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        // 如果是 401 错误，说明token失效或未登录
+        if (error.response?.status === 401) {
+          // 清除本地存储的 token
+          localStorage.removeItem('token')
+          // 如果不在登录页，则跳转到登录页
+          if (window.location.pathname !== '/login') {
+            window.location.href = `/login?redirect=${window.location.pathname}`
+          }
+        }
+        return Promise.reject(error)
+      },
+    )
   }
 
   /**
@@ -257,6 +281,13 @@ class Fetcher {
     return this.request('ConfigController_getConfigItem', {
       params: { key },
     })
+  }
+
+  /**
+   * 检查用户是否登录
+   */
+  check() {
+    return this.request('UserController_check')
   }
 
   /**
@@ -360,7 +391,12 @@ class Fetcher {
   }
 }
 
+// 创建实例时检查本地存储的 token
 const fetcher = new Fetcher('http://localhost:3333')
+const token = localStorage.getItem('token')
+if (token) {
+  fetcher.setToken(token)
+}
 
 // eslint-disable-next-line import/no-default-export
 export default fetcher

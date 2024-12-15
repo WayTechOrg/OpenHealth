@@ -17,6 +17,13 @@ export class UserController {
   ) {}
 
   @Auth()
+  @ApiOperation({ summary: '检查用户是否登录' })
+  @Get('/check')
+  async check() {
+    return true
+  }
+
+  @Auth()
   @ApiOperation({ summary: '获取用户信息' })
   @Get('/:id')
   async getUsers(@Param('id') id: string) {

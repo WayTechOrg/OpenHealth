@@ -63,18 +63,21 @@ const router = createRouter({
 })
 
 // 路由守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('token')
+  const publicPages = ['/login', '/register', '/about', '/terms', '/privacy']
+  const authRequired = !publicPages.includes(to.path)
 
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!token) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath },
-      })
-    } else {
-      next()
-    }
+  // 如果需要认证且没有token
+  if (authRequired && !token) {
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath },
+    })
+  }
+  // 如果已登录且访问登录页，重定向到首页
+  else if (token && to.path === '/login') {
+    next('/')
   } else {
     next()
   }

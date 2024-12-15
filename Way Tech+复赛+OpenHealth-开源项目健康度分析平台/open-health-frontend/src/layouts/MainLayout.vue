@@ -1,12 +1,39 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useColorMode } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import fetcher from '@/utils/fetcher'
 import AppFooter from '@/components/AppFooter.vue'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const token = computed(() => localStorage.getItem('token'))
+const loading = ref(false)
+
+// 检查登录状态
+const checkLoginStatus = async () => {
+  const currentToken = localStorage.getItem('token')
+  if (!currentToken) return
+
+  try {
+    loading.value = true
+    // 调用后端验证接口
+    await fetcher.check()
+  } catch (error) {
+    // 如果验证失败，清除token并跳转到登录页
+    localStorage.removeItem('token')
+    fetcher.setToken('')
+    router.push('/login')
+    ElMessage.error('登录已过期，请重新登录')
+  } finally {
+    loading.value = false
+  }
+}
+
+// 组件挂载时检查登录状态
+onMounted(() => {
+  checkLoginStatus()
+})
 
 // 使用 vueuse 的 useColorMode 来管理暗黑模式
 const mode = useColorMode()
@@ -22,14 +49,17 @@ const toggleDark = () => {
 }
 
 const handleLogout = () => {
+  // 清除token
   localStorage.removeItem('token')
   fetcher.setToken('')
+  // 跳转到登录页
   router.push('/login')
+  ElMessage.success('已退出登录')
 }
 </script>
 
 <template>
-  <el-container class="layout-container">
+  <el-container v-loading="loading" class="layout-container">
     <!-- 主要内容区 -->
     <el-container class="main-container">
       <!-- 顶部导航栏 -->

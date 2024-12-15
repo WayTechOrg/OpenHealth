@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import * as echarts from 'echarts'
 import type { ECOption } from '@/types/echarts'
+import { useColorMode } from '@vueuse/core'
 
 const router = useRouter()
+const mode = useColorMode()
 
 // 从 localStorage 获取项目数据
 const projects = computed(() => {
@@ -52,9 +54,15 @@ onMounted(() => {
 
   // 趋势图配置
   const trendOption: ECOption = {
+    textStyle: {
+      color: mode.value === 'dark' ? '#fff' : '#000',
+    },
     title: {
       text: '项目健康度趋势',
       left: 'center',
+      textStyle: {
+        color: mode.value === 'dark' ? '#fff' : '#000',
+      },
     },
     tooltip: {
       trigger: 'axis',
@@ -62,6 +70,9 @@ onMounted(() => {
     legend: {
       data: ['活跃度', '社区健康度', '代码质量', '文档完整度'],
       bottom: 0,
+      textStyle: {
+        color: mode.value === 'dark' ? '#fff' : '#000',
+      },
     },
     grid: {
       left: '3%',
@@ -75,10 +86,31 @@ onMounted(() => {
       data: projects.value.map((p) =>
         new Date(p.lastAnalyzed).toLocaleDateString(),
       ),
+      axisLabel: {
+        color: mode.value === 'dark' ? '#fff' : '#000',
+      },
+      axisLine: {
+        lineStyle: {
+          color: mode.value === 'dark' ? '#555' : '#ccc',
+        },
+      },
     },
     yAxis: {
       type: 'value',
       max: 100,
+      axisLabel: {
+        color: mode.value === 'dark' ? '#fff' : '#000',
+      },
+      axisLine: {
+        lineStyle: {
+          color: mode.value === 'dark' ? '#555' : '#ccc',
+        },
+      },
+      splitLine: {
+        lineStyle: {
+          color: mode.value === 'dark' ? '#333' : '#eee',
+        },
+      },
     },
     series: [
       {
@@ -110,15 +142,24 @@ onMounted(() => {
 
   // 健康度分布图配置
   const healthOption: ECOption = {
+    textStyle: {
+      color: mode.value === 'dark' ? '#fff' : '#000',
+    },
     title: {
       text: '健康度分布',
       left: 'center',
+      textStyle: {
+        color: mode.value === 'dark' ? '#fff' : '#000',
+      },
     },
     tooltip: {
       trigger: 'item',
     },
     legend: {
       bottom: 0,
+      textStyle: {
+        color: mode.value === 'dark' ? '#fff' : '#000',
+      },
     },
     series: [
       {
@@ -128,18 +169,20 @@ onMounted(() => {
         avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 10,
-          borderColor: '#fff',
+          borderColor: mode.value === 'dark' ? '#333' : '#fff',
           borderWidth: 2,
         },
         label: {
           show: false,
           position: 'center',
+          color: mode.value === 'dark' ? '#fff' : '#000',
         },
         emphasis: {
           label: {
             show: true,
             fontSize: '20',
             fontWeight: 'bold',
+            color: mode.value === 'dark' ? '#fff' : '#000',
           },
         },
         labelLine: {
@@ -157,6 +200,31 @@ onMounted(() => {
 
   trendChart.setOption(trendOption)
   healthChart.setOption(healthOption)
+
+  // 监听主题变化
+  watch(mode, (newMode) => {
+    trendChart.dispose()
+    healthChart.dispose()
+
+    const newTrendChart = echarts.init(document.getElementById('trend-chart'))
+    const newHealthChart = echarts.init(
+      document.getElementById('health-distribution'),
+    )
+
+    // 更新配置中的颜色
+    trendOption.textStyle.color = newMode === 'dark' ? '#fff' : '#000'
+    trendOption.title.textStyle.color = newMode === 'dark' ? '#fff' : '#000'
+    trendOption.legend.textStyle.color = newMode === 'dark' ? '#fff' : '#000'
+    trendOption.xAxis.axisLabel.color = newMode === 'dark' ? '#fff' : '#000'
+    trendOption.yAxis.axisLabel.color = newMode === 'dark' ? '#fff' : '#000'
+
+    healthOption.textStyle.color = newMode === 'dark' ? '#fff' : '#000'
+    healthOption.title.textStyle.color = newMode === 'dark' ? '#fff' : '#000'
+    healthOption.legend.textStyle.color = newMode === 'dark' ? '#fff' : '#000'
+
+    newTrendChart.setOption(trendOption)
+    newHealthChart.setOption(healthOption)
+  })
 
   // 响应式调整
   window.addEventListener('resize', () => {

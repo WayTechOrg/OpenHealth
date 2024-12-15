@@ -158,41 +158,70 @@ const teamMembers = [
 
 .team-members {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
   margin-top: 20px;
 }
 
 .member-card {
   text-align: center;
-  padding: 20px;
+  padding: 30px;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+}
+
+.member-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .member-avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 60px;
-  margin-bottom: 16px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  border: 4px solid var(--el-color-primary-light-8);
+  transition: all 0.3s ease;
+  object-fit: cover;
+}
+
+.member-card:hover .member-avatar {
+  border-color: var(--el-color-primary);
+  transform: scale(1.05);
 }
 
 .member-card h3 {
   margin: 0;
   color: var(--el-text-color-primary);
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .member-role {
-  color: var(--el-text-color-secondary);
-  margin: 8px 0;
+  color: var(--el-color-primary);
+  margin: 10px 0;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .member-desc {
   color: var(--el-text-color-regular);
-  margin: 12px 0;
+  margin: 15px 0;
+  line-height: 1.6;
+  font-size: 14px;
 }
 
 .member-links {
-  margin-top: 16px;
+  margin-top: 20px;
+}
+
+.member-links .el-button {
+  transition: all 0.3s ease;
+}
+
+.member-links .el-button:hover {
+  transform: rotate(360deg);
+  background-color: var(--el-color-primary-dark-2);
 }
 
 a {
