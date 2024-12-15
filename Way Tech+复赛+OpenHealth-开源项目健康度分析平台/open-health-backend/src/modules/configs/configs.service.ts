@@ -185,12 +185,15 @@ export class ConfigsService {
 
     if (configCache) {
       try {
-        const instanceConfigsValue = plainToInstance<IConfig, any>(
-          IConfig as any,
-          JSON.parse(configCache) as any,
-        ) as any as IConfig
+        // 使用 class-transformer 转换到 IConfig 实例
+        // const instanceConfigsValue = plainToInstance<IConfig, any>(
+        //   IConfig as any,
+        //   JSON.parse(configCache) as any,
+        // ) as any as IConfig
+        // return instanceConfigsValue
 
-        return instanceConfigsValue
+        // 但是此处不需要 class-transformer 转换，直接返回 JSON 解析后的对象
+        return JSON.parse(configCache) as IConfig
       } catch {
         await this.configInit()
         return await this.getConfig()
