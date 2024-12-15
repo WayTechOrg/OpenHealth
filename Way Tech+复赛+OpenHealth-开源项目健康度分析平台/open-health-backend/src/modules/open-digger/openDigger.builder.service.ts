@@ -13,11 +13,26 @@ export class OpenDiggerBuilderService {
   }
 
   // 封装请求方法，添加错误处理
+  // 修改 fetchData 方法
   private async fetchData(url: string, metricName: string) {
     try {
       const response = await axios.get(url)
+      // 如果数据为空对象或空数组，返回 null
+      if (
+        !response.data ||
+        (typeof response.data === 'object' &&
+          Object.keys(response.data).length === 0) ||
+        (Array.isArray(response.data) && response.data.length === 0)
+      ) {
+        return null
+      }
       return response.data
     } catch (error) {
+      // 如果是 404 错误，返回 null
+      if (error.response && error.response.status === 404) {
+        return null
+      }
+      // 其他错误仍然抛出
       throw new Error(`请求 ${metricName} (${url}) 失败: ${error.message}`)
     }
   }
