@@ -21,6 +21,28 @@ export class OpenDiggerSchedulerService {
     private readonly builderService: OpenDiggerBuilderService,
   ) {}
 
+  // 过滤最近一年的数据
+  private filterLastOneYearData(data: any) {
+    if (!data) return data
+
+    const oneYearAgo = new Date()
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
+    const cutoffDate = oneYearAgo.toISOString().slice(0, 7)
+
+    // 如果数据是对象形式，过滤键值
+    if (typeof data === 'object' && !Array.isArray(data)) {
+      const filteredData = {}
+      for (const [key, value] of Object.entries(data)) {
+        if (key >= cutoffDate) {
+          filteredData[key] = value
+        }
+      }
+      return filteredData
+    }
+
+    return data
+  }
+
   // 每天凌晨2点执行同步
   @Cron('0 0 2 * * *')
   async handleCron() {
@@ -64,7 +86,9 @@ export class OpenDiggerSchedulerService {
 
       for (const [metricName, fetcher] of Object.entries(metricsMap)) {
         try {
-          results[metricName] = await fetcher()
+          const data = await fetcher()
+          // 对每个指标数据进行过滤
+          results[metricName] = this.filterLastOneYearData(data)
         } catch (error) {
           throw new Error(`获取 ${metricName} 指标时失败: ${error.message}`)
         }

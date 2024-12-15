@@ -15,7 +15,7 @@ export class AnalyzerService {
   async calculateCommitFrequencyScore(
     activity?: TimeSeriesData,
   ): Promise<number> {
-    if (!activity) return 0
+    if (!activity) return 50
 
     const commitCounts = Object.values(activity)
     if (commitCounts.length === 0) return 0
@@ -31,7 +31,7 @@ export class AnalyzerService {
 
   // 计算Issue活跃度分数 (0-100)
   async calculateIssueActivityScore(issues?: IssueMetrics): Promise<number> {
-    if (!issues) return 0
+    if (!issues) return 50
 
     const {
       new: newIssues,

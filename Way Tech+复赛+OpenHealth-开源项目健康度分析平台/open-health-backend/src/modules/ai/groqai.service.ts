@@ -18,7 +18,7 @@ export class GroqAIService {
   }
 
   async analyze(prompt: string): Promise<string> {
-    console.log('prompt', prompt)
+    // console.log('prompt', prompt)
     if (!this.apiKey) {
       throw new Error('GROQ_API_KEY is not set')
     }
