@@ -20,6 +20,7 @@ interface Project {
   }
   lastAnalyzed: string
   aiAnalysis?: string
+  aiScore?: number
 }
 
 const projects = ref<Project[]>([])
@@ -107,12 +108,17 @@ const fetchAIAnalysis = async (project: Project) => {
       project.repo,
     )
 
+    if (aiAnalysis.score === 0) {
+      ElMessage.warning('AI评分生成异常，请稍后重试')
+    }
+
     // 更新项目数据
     const index = projects.value.findIndex((p) => p.id === project.id)
     if (index !== -1) {
       projects.value[index] = {
         ...project,
         aiAnalysis: aiAnalysis.analysis,
+        aiScore: aiAnalysis.score,
       }
       saveProjects()
     }
@@ -148,6 +154,11 @@ onMounted(() => {
           <template #default="{ row }">
             <div class="ai-analysis" v-loading="loadingAI[row.id]">
               <div v-if="row.aiAnalysis">
+                <div class="ai-score-container" v-if="row.aiScore">
+                  <el-tag type="success" size="large" effect="dark">
+                    AI 综合评分：{{ row.aiScore }} 分
+                  </el-tag>
+                </div>
                 <div v-html="md.render(row.aiAnalysis)" />
                 <el-button
                   type="primary"
@@ -179,6 +190,17 @@ onMounted(() => {
 
         <el-table-column prop="owner" label="所有者" />
         <el-table-column prop="repo" label="仓库名" />
+
+        <el-table-column label="AI 评分" width="120">
+          <template #default="{ row }">
+            <template v-if="row.aiScore">
+              <el-tag type="success" effect="light">
+                {{ row.aiScore }} 分
+              </el-tag>
+            </template>
+            <el-tag v-else type="info" effect="plain"> 未分析 </el-tag>
+          </template>
+        </el-table-column>
 
         <el-table-column label="健康度评分" width="400">
           <template #default="{ row }">
@@ -245,7 +267,7 @@ onMounted(() => {
                 @click="handleAnalyze(row)"
                 :loading="loading"
               >
-                分析
+                分析 (非 AI)
               </el-button>
               <el-button type="danger" @click="handleDelete(row)">
                 删除
@@ -304,31 +326,107 @@ onMounted(() => {
 }
 
 .ai-analysis {
-  padding: 20px;
+  padding: 24px;
   background-color: var(--el-bg-color-page);
+  border-radius: 8px;
 }
 
 :deep(.ai-analysis h1) {
-  font-size: 1.5em;
-  margin-bottom: 16px;
+  font-size: 1.8em;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--el-border-color-light);
+  color: var(--el-text-color-primary);
 }
 
 :deep(.ai-analysis h2) {
+  font-size: 1.5em;
+  margin: 24px 0 16px;
+  color: var(--el-text-color-primary);
+}
+
+:deep(.ai-analysis h3) {
   font-size: 1.3em;
-  margin: 16px 0;
+  margin: 20px 0 12px;
+  color: var(--el-text-color-primary);
 }
 
 :deep(.ai-analysis p) {
-  margin: 12px 0;
-  line-height: 1.6;
+  margin: 14px 0;
+  line-height: 1.8;
+  color: var(--el-text-color-regular);
 }
 
 :deep(.ai-analysis ul, .ai-analysis ol) {
   padding-left: 24px;
-  margin: 12px 0;
+  margin: 14px 0;
 }
 
 :deep(.ai-analysis li) {
-  margin: 8px 0;
+  margin: 10px 0;
+  line-height: 1.6;
+  color: var(--el-text-color-regular);
+}
+
+:deep(.ai-analysis code) {
+  background-color: var(--el-bg-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+  color: var(--el-text-color-primary);
+}
+
+:deep(.ai-analysis pre) {
+  background-color: var(--el-bg-color);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+:deep(.ai-analysis pre code) {
+  background-color: transparent;
+  padding: 0;
+}
+
+:deep(.ai-analysis blockquote) {
+  border-left: 4px solid var(--el-border-color);
+  margin: 16px 0;
+  padding: 0 16px;
+  color: var(--el-text-color-secondary);
+}
+
+:deep(.ai-analysis table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+:deep(.ai-analysis th, .ai-analysis td) {
+  border: 1px solid var(--el-border-color-light);
+  padding: 8px 12px;
+}
+
+:deep(.ai-analysis th) {
+  background-color: var(--el-bg-color);
+}
+
+:deep(.ai-analysis a) {
+  color: var(--el-color-primary);
+  text-decoration: none;
+}
+
+:deep(.ai-analysis a:hover) {
+  text-decoration: underline;
+}
+
+.ai-score-container {
+  margin-bottom: 20px;
+  text-align: center;
+  padding: 16px;
+  background-color: var(--el-bg-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 </style>

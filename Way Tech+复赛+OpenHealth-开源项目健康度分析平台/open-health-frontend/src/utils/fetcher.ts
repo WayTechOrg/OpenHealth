@@ -120,7 +120,10 @@ interface ApiTypes {
       owner: string
       repo: string
     }
-    response: any
+    response: {
+      analysis: string
+      score: number
+    }
   }
 }
 

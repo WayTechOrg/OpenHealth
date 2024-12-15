@@ -101,6 +101,7 @@ const saveProjectToLocal = (projectData: any, aiAnalysis: any) => {
       },
       lastAnalyzed: new Date().toISOString(),
       aiAnalysis: aiAnalysis.analysis,
+      aiScore: aiAnalysis.score,
     }
 
     // 添加到项目列表
@@ -128,6 +129,10 @@ const handleAnalyze = async () => {
     // 获取健康度数据
     const healthData = await fetcher.getProjectHealth(platform, owner, repo)
     const aiAnalysis = await fetcher.getProjectHealthAI(platform, owner, repo)
+
+    if (aiAnalysis.score === 0) {
+      ElMessage.warning('AI评分生成异常，请稍后重试')
+    }
 
     // 保存项目到本地存储
     saveProjectToLocal(healthData, aiAnalysis)
@@ -232,10 +237,18 @@ const handleAnalyze = async () => {
         </el-tab-pane>
 
         <el-tab-pane label="AI 分析建议">
-          <div
-            class="ai-analysis"
-            v-html="md.render(analysisResult.ai.analysis)"
-          ></div>
+          <div class="ai-analysis">
+            <div class="ai-score" v-if="analysisResult.ai.score">
+              <el-alert
+                title="AI 综合评分"
+                type="success"
+                :description="`${analysisResult.ai.score} 分`"
+                :closable="false"
+                show-icon
+              />
+            </div>
+            <div v-html="md.render(analysisResult.ai.analysis)"></div>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -266,19 +279,115 @@ const handleAnalyze = async () => {
 }
 
 .ai-analysis {
-  padding: 20px;
-  line-height: 1.6;
+  padding: 24px;
+  line-height: 1.8;
+  background-color: var(--el-bg-color-page);
+  border-radius: 8px;
 }
 
-:deep(.ai-analysis h1, .ai-analysis h2, .ai-analysis h3) {
-  margin: 16px 0;
+.ai-score {
+  margin-bottom: 24px;
+}
+
+:deep(.ai-analysis h1) {
+  font-size: 1.8em;
+  margin: 24px 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--el-border-color-light);
+  color: var(--el-text-color-primary);
+}
+
+:deep(.ai-analysis h2) {
+  font-size: 1.5em;
+  margin: 24px 0 16px;
+  color: var(--el-text-color-primary);
+}
+
+:deep(.ai-analysis h3) {
+  font-size: 1.3em;
+  margin: 20px 0 12px;
+  color: var(--el-text-color-primary);
 }
 
 :deep(.ai-analysis p) {
-  margin: 12px 0;
+  margin: 14px 0;
+  line-height: 1.8;
+  color: var(--el-text-color-regular);
 }
 
 :deep(.ai-analysis ul, .ai-analysis ol) {
-  padding-left: 20px;
+  padding-left: 24px;
+  margin: 14px 0;
+}
+
+:deep(.ai-analysis li) {
+  margin: 10px 0;
+  line-height: 1.6;
+  color: var(--el-text-color-regular);
+  position: relative;
+}
+
+:deep(.ai-analysis code) {
+  background-color: var(--el-bg-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+  color: var(--el-text-color-primary);
+}
+
+:deep(.ai-analysis pre) {
+  background-color: var(--el-bg-color);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+:deep(.ai-analysis pre code) {
+  background-color: transparent;
+  padding: 0;
+}
+
+:deep(.ai-analysis blockquote) {
+  border-left: 4px solid var(--el-border-color);
+  margin: 16px 0;
+  padding: 0 16px;
+  color: var(--el-text-color-secondary);
+}
+
+:deep(.ai-analysis table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+:deep(.ai-analysis th, .ai-analysis td) {
+  border: 1px solid var(--el-border-color-light);
+  padding: 8px 12px;
+}
+
+:deep(.ai-analysis th) {
+  background-color: var(--el-bg-color);
+}
+
+:deep(.ai-analysis a) {
+  color: var(--el-color-primary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+:deep(.ai-analysis a:hover) {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+:deep(.ai-analysis strong) {
+  color: var(--el-text-color-primary);
+  font-weight: 600;
+}
+
+:deep(.ai-analysis em) {
+  color: var(--el-text-color-secondary);
 }
 </style>
