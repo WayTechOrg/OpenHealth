@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import axios from 'axios'
 
 @Injectable()
 export class OpenDiggerBuilderService {
   private readonly baseUrl = 'https://oss.x-lab.info/open_digger'
-
+  private readonly logger = new Logger(OpenDiggerBuilderService.name)
   constructor() {}
 
   // 获取基础URL
@@ -15,6 +15,7 @@ export class OpenDiggerBuilderService {
   // 封装请求方法，添加错误处理
   // 修改 fetchData 方法
   private async fetchData(url: string, metricName: string) {
+    this.logger.debug(`开始获取 ${metricName} 的数据...`)
     try {
       const response = await axios.get(url)
       // 如果数据为空对象或空数组，返回 null
