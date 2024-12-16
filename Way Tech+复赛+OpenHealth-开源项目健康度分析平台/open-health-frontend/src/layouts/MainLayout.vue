@@ -81,6 +81,7 @@ const handleLogout = () => {
               <el-menu-item index="/">仪表盘</el-menu-item>
               <el-menu-item index="/analysis">项目分析</el-menu-item>
               <el-menu-item index="/projects">项目列表</el-menu-item>
+              <el-menu-item index="/compare">项目对比</el-menu-item>
             </template>
             <el-menu-item index="/about">关于我们</el-menu-item>
           </el-menu>
