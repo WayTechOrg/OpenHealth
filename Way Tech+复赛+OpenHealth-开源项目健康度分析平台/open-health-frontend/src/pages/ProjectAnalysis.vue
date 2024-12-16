@@ -158,6 +158,41 @@ const handleAnalyze = async () => {
     loading.value = false
   }
 }
+
+const parseRepoUrl = (url: string) => {
+  try {
+    const urlObj = new URL(url)
+    const pathParts = urlObj.pathname.split('/').filter(Boolean)
+
+    if (urlObj.hostname === 'github.com' && pathParts.length >= 2) {
+      form.value.platform = 'github'
+      form.value.owner = pathParts[0]
+      form.value.repo = pathParts[1]
+      return true
+    } else if (urlObj.hostname.includes('gitlab') && pathParts.length >= 2) {
+      form.value.platform = 'gitlab'
+      form.value.owner = pathParts[0]
+      form.value.repo = pathParts[1]
+      return true
+    }
+
+    ElMessage.warning('不支持的仓库链接格式')
+    return false
+  } catch (error) {
+    ElMessage.error('无效的URL格式')
+    return false
+  }
+}
+
+const repoUrl = ref('')
+
+const handleUrlParse = () => {
+  if (!repoUrl.value) {
+    ElMessage.warning('请输入仓库链接')
+    return
+  }
+  parseRepoUrl(repoUrl.value)
+}
 </script>
 
 <template>
@@ -184,6 +219,18 @@ const handleAnalyze = async () => {
 
         <el-form-item label="仓库名称" prop="repo">
           <el-input v-model="form.repo" />
+        </el-form-item>
+
+        <el-form-item label="仓库链接">
+          <el-input
+            v-model="repoUrl"
+            placeholder="例如: https://github.com/owner/repo"
+            class="repo-url-input"
+          >
+            <template #append>
+              <el-button @click="handleUrlParse">解析</el-button>
+            </template>
+          </el-input>
         </el-form-item>
 
         <el-form-item>
@@ -389,5 +436,9 @@ const handleAnalyze = async () => {
 
 :deep(.ai-analysis em) {
   color: var(--el-text-color-secondary);
+}
+
+.repo-url-input {
+  width: 100%;
 }
 </style>

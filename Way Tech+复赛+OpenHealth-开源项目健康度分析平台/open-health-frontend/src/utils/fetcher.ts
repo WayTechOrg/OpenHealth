@@ -392,7 +392,7 @@ class Fetcher {
 }
 
 // 创建实例时检查本地存储的 token
-const fetcher = new Fetcher('http://192.168.8.10:3333')
+const fetcher = new Fetcher('http://localhost:3333')
 const token = localStorage.getItem('token')
 if (token) {
   fetcher.setToken(token)
