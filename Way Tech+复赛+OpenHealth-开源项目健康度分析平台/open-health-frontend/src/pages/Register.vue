@@ -23,7 +23,7 @@ const registerForm = ref({
 const loading = ref(false)
 const formRef = ref<FormInstance>()
 
-const validatePass = (rule: any, value: string, callback: any) => {
+const validatePass = (_: any, value: string, callback: any) => {
   if (value === '') {
     callback(new Error('请再次输入密码'))
   } else if (value !== registerForm.value.password) {
@@ -94,7 +94,6 @@ const handleBack = () => {
           <el-input
             v-model="registerForm.username"
             placeholder="请输入用户名"
-            :prefix-icon="User"
           />
         </el-form-item>
 
@@ -103,7 +102,6 @@ const handleBack = () => {
             v-model="registerForm.password"
             type="password"
             placeholder="请输入密码"
-            :prefix-icon="Lock"
             show-password
           />
         </el-form-item>
@@ -113,7 +111,6 @@ const handleBack = () => {
             v-model="registerForm.confirmPassword"
             type="password"
             placeholder="请再次输入密码"
-            :prefix-icon="Lock"
             show-password
           />
         </el-form-item>

@@ -31,18 +31,18 @@ const config = ref<Config>({
 
 const loading = ref(false)
 
-// 加载配置
-const loadConfig = async () => {
-  try {
-    loading.value = true
-    const { data } = await fetcher.getConfig()
-    config.value = data
-  } catch (error) {
-    ElMessage.error('加载配置失败')
-  } finally {
-    loading.value = false
-  }
-}
+// // 加载配置
+// const loadConfig = async () => {
+//   try {
+//     loading.value = true
+//     const { data } = await fetcher.getConfig()
+//     config.value = data
+//   } catch (error) {
+//     ElMessage.error('加载配置失败')
+//   } finally {
+//     loading.value = false
+//   }
+// }
 
 // 保存配置
 const handleSave = async () => {

@@ -12,7 +12,8 @@
           <h2>项目介绍</h2>
           <div class="gradient-border">
             <p>
-              OpenHealth 是一个开源项目健康度分析平台，旨在帮助开发者和组织更好地了解和改进他们的开源项目。通过分析多个维度的指标，我们为开源项目提供全面的健康度评估。
+              OpenHealth
+              是一个开源项目健康度分析平台，旨在帮助开发者和组织更好地了解和改进他们的开源项目。通过分析多个维度的指标，我们为开源项目提供全面的健康度评估。
             </p>
           </div>
         </section>
@@ -20,8 +21,12 @@
         <section class="section slide-up">
           <h2>核心功能</h2>
           <div class="features-grid">
-            <div v-for="(feature, index) in features" :key="feature.title" class="feature-card"
-              :style="{ animationDelay: `${index * 0.1}s` }">
+            <div
+              v-for="(feature, index) in features"
+              :key="feature.title"
+              class="feature-card"
+              :style="{ animationDelay: `${index * 0.1}s` }"
+            >
               <el-icon class="feature-icon" :size="40">
                 <component :is="feature.icon" />
               </el-icon>
@@ -34,13 +39,21 @@
         <section class="section slide-up">
           <h2>团队介绍</h2>
           <div class="team-members">
-            <div v-for="(member, index) in teamMembers" :key="member.name" class="member-card-wrapper"
-              :style="{ animationDelay: `${index * 0.2}s` }">
+            <div
+              v-for="(member, index) in teamMembers"
+              :key="member.name"
+              class="member-card-wrapper"
+              :style="{ animationDelay: `${index * 0.2}s` }"
+            >
               <div class="member-card">
                 <div class="member-card-front">
                   <div class="member-avatar-wrapper">
                     <div class="avatar-background"></div>
-                    <img :src="member.avatar" :alt="member.name" class="member-avatar" />
+                    <img
+                      :src="member.avatar"
+                      :alt="member.name"
+                      class="member-avatar"
+                    />
                     <div class="member-avatar-overlay">
                       <el-icon class="flip-icon">
                         <Refresh />
@@ -60,18 +73,31 @@
                     </div>
                     <p class="member-desc">{{ member.description }}</p>
                     <div class="member-skills">
-                      <el-tag v-for="skill in member.skills" :key="skill" class="skill-tag"
-                        :style="{ animationDelay: `${index * 0.1}s` }" effect="dark">
+                      <el-tag
+                        v-for="skill in member.skills"
+                        :key="skill"
+                        class="skill-tag"
+                        :style="{ animationDelay: `${index * 0.1}s` }"
+                        effect="dark"
+                      >
                         {{ skill }}
                       </el-tag>
                     </div>
                     <div class="member-links">
-                      <a :href="member.github" target="_blank" class="social-link github">
+                      <a
+                        :href="member.github"
+                        target="_blank"
+                        class="social-link github"
+                      >
                         <el-icon>
                           <Platform />
                         </el-icon>
                       </a>
-                      <a :href="`mailto:${member.email}`" class="social-link email" v-if="member.email">
+                      <a
+                        :href="`mailto:${member.email}`"
+                        class="social-link email"
+                        v-if="member.email"
+                      >
                         <el-icon>
                           <Message />
                         </el-icon>
@@ -89,13 +115,21 @@
           <div class="contact-container">
             <p>如果您有任何问题或建议，欢迎通过以下方式联系我们：</p>
             <div class="contact-links">
-              <a href="https://github.com/WayTechOrg" target="_blank" class="contact-link">
+              <a
+                href="https://github.com/WayTechOrg"
+                target="_blank"
+                class="contact-link"
+              >
                 <el-icon>
                   <Platform />
                 </el-icon>
                 <span>@WayTechOrg</span>
               </a>
-              <a href="https://github.com/WayTechOrg/OpenHealth" target="_blank" class="contact-link">
+              <a
+                href="https://github.com/WayTechOrg/OpenHealth"
+                target="_blank"
+                class="contact-link"
+              >
                 <el-icon>
                   <Document />
                 </el-icon>
@@ -110,29 +144,29 @@
 </template>
 
 <script setup lang="ts">
-import { Platform, Document, DataLine, Share, Monitor, ChatDotRound, Plus, Message, Refresh } from '@element-plus/icons-vue'
+import { Platform, Document, Message, Refresh } from '@element-plus/icons-vue'
 
 const features = [
   {
     title: '项目活跃度分析',
     description: '深入分析项目的贡献频率、更新活跃度等指标',
-    icon: 'DataLine'
+    icon: 'DataLine',
   },
   {
     title: '社区健康度评估',
     description: '评估社区参与度、响应速度和互动质量',
-    icon: 'Share'
+    icon: 'Share',
   },
   {
     title: '代码质量分析',
     description: '全方位检测代码质量、测试覆盖率等技术指标',
-    icon: 'Monitor'
+    icon: 'Monitor',
   },
   {
     title: 'AI 驱动的建议',
     description: '基于数据分析提供智能化改进建议',
-    icon: 'ChatDotRound'
-  }
+    icon: 'ChatDotRound',
+  },
 ]
 
 const teamMembers = [
@@ -143,7 +177,7 @@ const teamMembers = [
     avatar: 'https://github.com/wibus-wee.png',
     github: 'https://github.com/wibus-wee',
     email: 'wibus@qq.com',
-    skills: ['全栈开发', 'DevOps', '架构设计']
+    skills: ['全栈开发', 'DevOps', '架构设计'],
   },
   {
     name: 'yzd',
@@ -151,7 +185,7 @@ const teamMembers = [
     description: '富有创意的UI/UX设计师，专注于用户体验和界面交互设计。',
     avatar: 'https://github.com/yzd2005.png',
     github: 'https://github.com/yzd2005',
-    skills: ['UI设计', 'UX设计', '产品设计']
+    skills: ['UI设计', 'UX设计', '产品设计'],
   },
   {
     name: 'chillguy',
@@ -159,7 +193,7 @@ const teamMembers = [
     description: '经验丰富的项目经理，擅长团队协调和敏捷开发管理。',
     avatar: 'https://github.com/chillguy901.png',
     github: 'https://github.com/chillguy901',
-    skills: ['项目管理', '敏捷开发', '团队协作']
+    skills: ['项目管理', '敏捷开发', '团队协作'],
   },
 ]
 </script>
@@ -246,7 +280,11 @@ const teamMembers = [
   backface-visibility: hidden;
   border-radius: 20px;
   overflow: hidden;
-  background: linear-gradient(145deg, var(--el-bg-color-overlay), var(--el-bg-color));
+  background: linear-gradient(
+    145deg,
+    var(--el-bg-color-overlay),
+    var(--el-bg-color)
+  );
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 }
 
@@ -266,7 +304,11 @@ const teamMembers = [
   left: 0;
   right: 0;
   height: 200px;
-  background: linear-gradient(135deg, var(--el-color-primary), var(--el-color-success));
+  background: linear-gradient(
+    135deg,
+    var(--el-color-primary),
+    var(--el-color-success)
+  );
   opacity: 0.1;
 }
 
@@ -286,7 +328,11 @@ const teamMembers = [
   right: -5px;
   bottom: -5px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--el-color-primary), var(--el-color-success));
+  background: linear-gradient(
+    135deg,
+    var(--el-color-primary),
+    var(--el-color-success)
+  );
   opacity: 0.8;
   z-index: 1;
   transform: scale(0.95);
@@ -346,7 +392,11 @@ const teamMembers = [
 .role-badge {
   display: inline-block;
   padding: 6px 16px;
-  background: linear-gradient(135deg, var(--el-color-primary), var(--el-color-success));
+  background: linear-gradient(
+    135deg,
+    var(--el-color-primary),
+    var(--el-color-success)
+  );
   color: white;
   border-radius: 20px;
   font-size: 14px;
@@ -357,7 +407,11 @@ const teamMembers = [
 .member-card-back {
   transform: rotateY(180deg);
   padding: 30px;
-  background: linear-gradient(145deg, var(--el-bg-color), var(--el-bg-color-overlay));
+  background: linear-gradient(
+    145deg,
+    var(--el-bg-color),
+    var(--el-bg-color-overlay)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -484,7 +538,11 @@ const teamMembers = [
 
 .gradient-border {
   padding: 20px;
-  background: linear-gradient(145deg, var(--el-bg-color), var(--el-bg-color-overlay));
+  background: linear-gradient(
+    145deg,
+    var(--el-bg-color),
+    var(--el-bg-color-overlay)
+  );
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   position: relative;
@@ -498,7 +556,11 @@ const teamMembers = [
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--el-color-primary), var(--el-color-success));
+  background: linear-gradient(
+    90deg,
+    var(--el-color-primary),
+    var(--el-color-success)
+  );
   border-radius: 3px 3px 0 0;
 }
 
@@ -530,7 +592,11 @@ const teamMembers = [
 }
 
 .contact-section {
-  background: linear-gradient(145deg, var(--el-bg-color), var(--el-bg-color-overlay));
+  background: linear-gradient(
+    145deg,
+    var(--el-bg-color),
+    var(--el-bg-color-overlay)
+  );
   border-radius: 15px;
   padding: 30px;
 }

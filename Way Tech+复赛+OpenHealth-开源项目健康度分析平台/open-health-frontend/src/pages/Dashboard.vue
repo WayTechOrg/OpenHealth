@@ -2,7 +2,6 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import * as echarts from 'echarts'
-import type { ECOption } from '@/types/echarts'
 import { useColorMode } from '@vueuse/core'
 
 const router = useRouter()
@@ -17,7 +16,7 @@ const projects = computed(() => {
 // 计算统计数据
 const stats = computed(() => {
   const total = projects.value.length
-  const avgScores = {
+  const avgScores: { [key: string]: number } = {
     activity: 0,
     community: 0,
     code: 0,
@@ -25,14 +24,14 @@ const stats = computed(() => {
   }
 
   if (total > 0) {
-    projects.value.forEach((project) => {
+    projects.value.forEach((project: any) => {
       avgScores.activity += project.healthScore.activity
       avgScores.community += project.healthScore.community
       avgScores.code += project.healthScore.code
       avgScores.docs += project.healthScore.docs
     })
 
-    Object.keys(avgScores).forEach((key) => {
+    Object.keys(avgScores).forEach((key: any) => {
       avgScores[key] = Math.round(avgScores[key] / total)
     })
   }
@@ -53,7 +52,7 @@ onMounted(() => {
   )
 
   // 趋势图配置
-  const trendOption: ECOption = {
+  const trendOption: any = {
     textStyle: {
       color: mode.value === 'dark' ? '#fff' : '#000',
     },
@@ -83,7 +82,7 @@ onMounted(() => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: projects.value.map((p) =>
+      data: projects.value.map((p: any) =>
         new Date(p.lastAnalyzed).toLocaleDateString(),
       ),
       axisLabel: {
@@ -116,32 +115,32 @@ onMounted(() => {
       {
         name: '活跃度',
         type: 'line',
-        data: projects.value.map((p) => p.healthScore.activity),
+        data: projects.value.map((p: any) => p.healthScore.activity),
         smooth: true,
       },
       {
         name: '社区健康度',
         type: 'line',
-        data: projects.value.map((p) => p.healthScore.community),
+        data: projects.value.map((p: any) => p.healthScore.community),
         smooth: true,
       },
       {
         name: '代码质量',
         type: 'line',
-        data: projects.value.map((p) => p.healthScore.code),
+        data: projects.value.map((p: any) => p.healthScore.code),
         smooth: true,
       },
       {
         name: '文档完整度',
         type: 'line',
-        data: projects.value.map((p) => p.healthScore.docs),
+        data: projects.value.map((p: any) => p.healthScore.docs),
         smooth: true,
       },
     ],
   }
 
   // 健康度分布图配置
-  const healthOption: ECOption = {
+  const healthOption: any = {
     textStyle: {
       color: mode.value === 'dark' ? '#fff' : '#000',
     },

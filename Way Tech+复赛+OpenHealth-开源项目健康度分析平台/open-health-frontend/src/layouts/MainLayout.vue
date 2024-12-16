@@ -38,9 +38,6 @@ onMounted(() => {
 // 使用 vueuse 的 useColorMode 来管理暗黑模式
 const mode = useColorMode()
 
-// 侧边栏折叠状态
-const isCollapse = ref(false)
-
 // 切换暗黑模式
 const toggleDark = () => {
   mode.value = mode.value === 'dark' ? 'light' : 'dark'

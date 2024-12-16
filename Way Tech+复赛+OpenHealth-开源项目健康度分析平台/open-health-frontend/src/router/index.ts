@@ -69,7 +69,7 @@ const router = createRouter({
 })
 
 // 路由守卫
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _, next) => {
   const token = localStorage.getItem('token')
   const publicPages = ['/login', '/register', '/about', '/terms', '/privacy']
   const authRequired = !publicPages.includes(to.path)

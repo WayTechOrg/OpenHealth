@@ -68,11 +68,11 @@ const handleAnalyze = async (project: Project) => {
     loading.value = true
 
     // 获取最新的健康度数据
-    const healthData = await fetcher.getProjectHealth(
+    const healthData = (await fetcher.getProjectHealth(
       project.platform,
       project.owner,
       project.repo,
-    )
+    )) as any
 
     // 更新项目数据
     const index = projects.value.findIndex((p) => p.id === project.id)
@@ -102,11 +102,11 @@ const handleAnalyze = async (project: Project) => {
 const fetchAIAnalysis = async (project: Project) => {
   try {
     loadingAI.value[project.id] = true
-    const aiAnalysis = await fetcher.getProjectHealthAI(
+    const aiAnalysis = (await fetcher.getProjectHealthAI(
       project.platform,
       project.owner,
       project.repo,
-    )
+    )) as any
 
     if (aiAnalysis.score === 0) {
       ElMessage.warning('AI评分生成异常，请稍后重试')

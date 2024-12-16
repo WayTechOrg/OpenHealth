@@ -35,7 +35,7 @@ const handleLogin = async () => {
     await formRef.value.validate()
     loading.value = true
 
-    const { token } = await fetcher.login(loginForm.value)
+    const { token } = (await fetcher.login(loginForm.value)) as any
 
     // 保存token到localStorage
     localStorage.setItem('token', token)
@@ -84,11 +84,7 @@ onMounted(() => {
         label-position="top"
       >
         <el-form-item label="用户名" prop="username">
-          <el-input
-            v-model="loginForm.username"
-            placeholder="请输入用户名"
-            :prefix-icon="User"
-          />
+          <el-input v-model="loginForm.username" placeholder="请输入用户名" />
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
@@ -96,7 +92,6 @@ onMounted(() => {
             v-model="loginForm.password"
             type="password"
             placeholder="请输入密码"
-            :prefix-icon="Lock"
             show-password
           />
         </el-form-item>

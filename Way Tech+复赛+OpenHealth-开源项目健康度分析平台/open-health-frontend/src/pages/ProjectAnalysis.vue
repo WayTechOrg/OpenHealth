@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance } from 'element-plus'
 import fetcher from '@/utils/fetcher'
@@ -14,7 +14,7 @@ import {
   Legend,
 } from 'chart.js'
 import MarkdownIt from 'markdown-it'
-import { useRouter } from 'vue-router'
+import router from '@/router'
 
 // 注册 ChartJS 组件
 ChartJS.register(
@@ -127,8 +127,16 @@ const handleAnalyze = async () => {
     const { platform, owner, repo } = form.value
 
     // 获取健康度数据
-    const healthData = await fetcher.getProjectHealth(platform, owner, repo)
-    const aiAnalysis = await fetcher.getProjectHealthAI(platform, owner, repo)
+    const healthData = (await fetcher.getProjectHealth(
+      platform,
+      owner,
+      repo,
+    )) as any
+    const aiAnalysis = (await fetcher.getProjectHealthAI(
+      platform,
+      owner,
+      repo,
+    )) as any
 
     if (aiAnalysis.score === 0) {
       ElMessage.warning('AI评分生成异常，请稍后重试')
@@ -151,7 +159,7 @@ const handleAnalyze = async () => {
     }
 
     ElMessage.success('分析完成')
-  } catch (error) {
+  } catch (error: any) {
     console.error('分析失败:', error)
     ElMessage.error('分析失败: ' + (error.message || '未知错误'))
   } finally {

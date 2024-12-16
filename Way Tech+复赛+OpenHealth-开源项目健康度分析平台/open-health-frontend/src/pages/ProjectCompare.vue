@@ -102,7 +102,7 @@ const addProject = async () => {
   // 从 localStorage 中查找项目
   const storedProjects = JSON.parse(localStorage.getItem('projects') || '[]')
   const storedProject = storedProjects.find(
-    (p) =>
+    (p: any) =>
       p.platform === form.value.platform &&
       p.owner === form.value.owner &&
       p.repo === form.value.repo,
@@ -127,16 +127,16 @@ const updateProject = async (project: Project) => {
   try {
     loading.value = true
     // 获取最新数据
-    const healthData = await fetcher.getProjectHealth(
+    const healthData = (await fetcher.getProjectHealth(
       project.platform,
       project.owner,
       project.repo,
-    )
-    const aiData = await fetcher.getProjectHealthAI(
+    )) as any
+    const aiData = (await fetcher.getProjectHealthAI(
       project.platform,
       project.owner,
       project.repo,
-    )
+    )) as any
 
     // 更新项目数据
     const index = projects.value.findIndex(
@@ -163,7 +163,7 @@ const updateProject = async (project: Project) => {
         localStorage.getItem('projects') || '[]',
       )
       const storedIndex = storedProjects.findIndex(
-        (p) =>
+        (p: any) =>
           p.platform === project.platform &&
           p.owner === project.owner &&
           p.repo === project.repo,
@@ -386,7 +386,7 @@ const generateReport = computed(() => {
     community: '社区健康度',
     code: '代码质量',
     docs: '文档完整度',
-  }
+  } as any
 
   if (projects.value.length === 1) {
     // 单个项目的报告
@@ -395,13 +395,15 @@ const generateReport = computed(() => {
     metrics.forEach((metric) => {
       report.push(`
 #### ${metricNames[metric]}
-- 得分: ${project.healthScore?.[metric] || 0}分
+- 得分: ${project.healthScore?.[metric as keyof typeof project.healthScore] || 0}分
       `)
     })
   } else {
     // 多个项目的对比报告
     metrics.forEach((metric) => {
-      const scores = projects.value.map((p) => p.healthScore?.[metric] || 0)
+      const scores = projects.value.map(
+        (p) => p.healthScore?.[metric as keyof typeof p.healthScore] || 0,
+      )
       const max = Math.max(...scores)
       const min = Math.min(...scores)
       const bestProject = projects.value[scores.indexOf(max)]
@@ -423,11 +425,11 @@ const generateReport = computed(() => {
 const regenerateAI = async (project: Project) => {
   try {
     loading.value = true
-    const aiData = await fetcher.getProjectHealthAI(
+    const aiData = (await fetcher.getProjectHealthAI(
       project.platform,
       project.owner,
       project.repo,
-    )
+    )) as any
 
     // 更新项目的 AI 分析结果
     const index = projects.value.findIndex(
