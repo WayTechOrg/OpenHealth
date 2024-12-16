@@ -54,6 +54,7 @@ jobs:
           redis-version: 6
       - name: Test Bundle Server
         run: |
+          cd 'Way Tech+复赛+OpenHealth-开源项目健康度分析平台/open-health-backend'
           bash scripts/workflow/test-server.sh
   build-frontend:
     runs-on: ubuntu-latest

@@ -9,8 +9,6 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 
-cd 'Way Tech+复赛+OpenHealth-开源项目健康度分析平台/open-health-backend'
-
 nohup node out/index.js 1>/dev/null &
 p=$!
 echo "started server with pid $p"
