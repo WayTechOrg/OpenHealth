@@ -42,6 +42,7 @@ jobs:
           pnpm i
       - name: Build project
         run: |
+          cd 'Way Tech+复赛+OpenHealth-开源项目健康度分析平台/open-health-backend'
           npm run bundle
       - name: Start MongoDB
         uses: supercharge/mongodb-github-action@v1.10.0
@@ -81,4 +82,5 @@ jobs:
           pnpm i
       - name: Build project
         run: |
+          cd 'Way Tech+复赛+OpenHealth-开源项目健康度分析平台/open-health-frontend'
           npm run build
