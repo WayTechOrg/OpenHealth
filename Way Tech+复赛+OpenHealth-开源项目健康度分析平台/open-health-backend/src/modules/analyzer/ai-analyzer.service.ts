@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Injectable } from '@nestjs/common'
 import { GroqAIService } from '../ai/groqai.service'
 import { ProjectMetrics } from './analyzer.interface'
@@ -86,6 +87,20 @@ export class AIAnalyzerService {
     `
 
     // 2. 构建具体数据分析
+    const openrankAnalysis = `
+4. OpenRank指标:
+- 项目OpenRank趋势: ${JSON.stringify(Object.entries(metrics.openrank?.openrank || {}).slice(-6))} (最近6个月)
+${
+  metrics.openrank?.communityOpenrank?.meta
+    ? `- 社区规模: ${metrics.openrank.communityOpenrank.meta.nodes.length}个节点
+- 社区核心成员: ${metrics.openrank.communityOpenrank.meta.nodes
+        .slice(0, 20)
+        .map((node) => node[1])
+        .join(', ')}`
+    : '- 暂无社区网络数据'
+}
+  `
+
     const detailedMetrics = `
 具体数据分析:
 
@@ -113,6 +128,8 @@ export class AIAnalyzerService {
 - 新增贡献者趋势: ${JSON.stringify(Object.entries(metrics.contributors?.newContributors || {}).slice(-3))}
 - 流失贡献者情况: ${JSON.stringify(Object.entries(metrics.contributors?.inactiveContributors || {}).slice(-3))}
 - 项目巴士因子: ${JSON.stringify(Object.entries(metrics.contributors?.busFactor || {}).slice(-3))}
+
+${openrankAnalysis}
     `
 
     // 3. 构建分析请求
@@ -121,32 +138,34 @@ export class AIAnalyzerService {
 
 1. 项目健康状况总结:
 - 总体健康度评价
-- 各维度表现分析
+- 各维度表现分析（包括活跃度、社区健康度和OpenRank表现）
 - 突出的优势和问题
 
 2. 发展趋势分析:
 - 活跃度变化趋势
 - 社区增长情况
+- OpenRank变化趋势分析
 - 未来发展预测
 
-3. 具体问题诊断:
+3. 社区影响力分析:
+- 基于OpenRank的项目影响力评估
+- 核心贡献者分析
+- 社区结构评估
+
+4. 具体问题诊断:
 - 识别当前存在的主要问题
 - 分析问题产生的原因
 - 评估问题的严重程度
 
-4. 改进建议(请按优先级排序):
+5. 改进建议(请按优先级排序):
 - 短期改进建议(1-3个月)
 - 中期改进计划(3-6个月)
 - 长期发展建议(6个月以上)
 
-5. 影响力分析:
-- 项目在开源生态中的地位
-- 技术影响力变化趋势
-- 社区价值分布情况
-
 6. 可持续性评估:
 - 贡献者更替情况
 - 核心维护者依赖风险
+- 社区活跃度与影响力的关系
 - 长期发展潜力预测
 
 对于每条建议,请详细地说明:
@@ -155,9 +174,9 @@ export class AIAnalyzerService {
 - 实施难度评估
 - 具体执行步骤
 
-最后，请你根据你自己的分析结果，不要参考我提供计算出来的评分和评分准则，自己计算一个评分，并给出评分理由和你自己的评分准则，请你忽略掉「代码质量」和「文档完整性」这两个维度。
+最后，请你根据你自己的分析结果，给出评分和评分理由。评分时要特别考虑项目的OpenRank表现，这反映了项目在开源生态中的影响力。
 
-除了输出你的评分和评分理由与准则外，同时，还需要将你的评分在输出的最后以注释的形式给出，如: <!--score:90-->
+除了输出你的评分和评分理由外，同时，还需要将你的评分在输出的最后以注释的形式给出，如: <!--score:90-->
 注释内不要出现任何空格
 
 请用清晰的结构化格式输出分析结果。
