@@ -31,6 +31,7 @@ OpenHealth is built with a frontend using Vue.js, and a backend using Nest.js an
   - Nest.js
   - MongoDB
   - OpenDigger
+  - Redis
   - TypeScript
 
 ## License
