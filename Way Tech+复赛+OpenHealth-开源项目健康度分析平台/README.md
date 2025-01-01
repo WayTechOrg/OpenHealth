@@ -16,6 +16,11 @@ OpenHealth is a comprehensive platform designed to analyze and evaluate the heal
 | Project List          | List all projects and their health scores with filtering and sorting capabilities                                                     | ![Project List](../preview/list1.png)         |
 | Project Detail        | In-depth analysis of individual projects with detailed metrics and historical data                                                    | ![Project Detail](../preview/list2.png)       |
 
+## Preview Video
+
+https://github.com/user-attachments/assets/d05f9814-5794-44f9-9e3b-12f7596a51bc
+
+
 ## Technology Stack
 
 ### Frontend
